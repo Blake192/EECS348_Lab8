@@ -33,7 +33,7 @@ TEST(MatrixImplementation, GetValue_Basic) {
     Matrix matrix(expected);
 
     for (int i = 0; i < expected.size(); i++) {
-        for (int j = 0; i < expected.size(); i++) {
+        for (int j = 0; j < expected[i].size(); j++) {
             EXPECT_EQ(matrix.get_value(i, j), expected[i][j]);
         }
     }
@@ -50,7 +50,7 @@ TEST(MatrixImplementation, GetValue_Random) {
     Matrix matrix(expected);
 
     for (int i = 0; i < expected.size(); i++) {
-        for (int j = 0; i < expected.size(); i++) {
+        for (int j = 0; j < expected[i].size(); j++) {
             EXPECT_EQ(matrix.get_value(i, j), expected[i][j]);
         }
     }
@@ -71,13 +71,13 @@ TEST(MatrixImplementation, SetValue_Basic) {
     Matrix matrix(initial);
 
     for (int i = 0; i < expected.size(); i++) {
-        for (int j = 0; i < expected.size(); i++) {
+        for (int j = 0; j < expected[i].size(); j++) {
             matrix.set_value(i, j, expected[i][j]);
         }
     }
 
     for (int i = 0; i < expected.size(); i++) {
-        for (int j = 0; i < expected.size(); i++) {
+        for (int j = 0; j < expected[i].size(); j++) {
             EXPECT_EQ(matrix.get_value(i, j), expected[i][j]);
         }
     }
@@ -91,22 +91,22 @@ TEST(MatrixImplementation, SetValue_Random) {
         { 0, 0, 0, 0 },
     };
     std::vector<std::vector<int>> expected = {
-        { 15, 22, 33, 44},
-        { 55, 22, 33, 44},
-        { 45, 22, 33, 11},
-        { 15, 22, 37, 44},
+        { 15, 22, 33, 44 },
+        { 55, 22, 33, 44 },
+        { 45, 22, 33, 11 },
+        { 15, 22, 37, 44 },
     };
 
     Matrix matrix(initial);
 
     for (int i = 0; i < expected.size(); i++) {
-        for (int j = 0; i < expected.size(); i++) {
+        for (int j = 0; j < expected[i].size(); j++) {
             matrix.set_value(i, j, expected[i][j]);
         }
     }
 
     for (int i = 0; i < expected.size(); i++) {
-        for (int j = 0; i < expected.size(); i++) {
+        for (int j = 0; j < expected[i].size(); j++) {
             EXPECT_EQ(matrix.get_value(i, j), expected[i][j]);
         }
     }
@@ -124,7 +124,7 @@ TEST(MatrixImplementation, Addition_Basic) {
     auto result = matrix1 + matrix2;
 
     for (int i = 0; i < initial.size(); i++) {
-        for (int j = 0; j < initial.size(); j++) {
+        for (int j = 0; j < initial[i].size(); j++) {
             EXPECT_EQ(result.get_value(i, j), 2);
         }
     }
@@ -152,7 +152,7 @@ TEST(MatrixImplementation, Addition_Random) {
     auto result = matrix1 + matrix2;
 
     for (int i = 0; i < initial1.size(); i++) {
-        for (int j = 0; j < initial1.size(); j++) {
+        for (int j = 0; j < initial1[i].size(); j++) {
             EXPECT_EQ(result.get_value(i, j), expected[i][j]);
         }
     }
@@ -170,7 +170,7 @@ TEST(MatrixImplementation, Multiplication_Basic) {
     auto result = matrix1 * matrix2;
 
     for (int i = 0; i < initial.size(); i++) {
-        for (int j = 0; j < initial.size(); j++) {
+        for (int j = 0; j < initial[i].size(); j++) {
             EXPECT_EQ(result.get_value(i, j), 3);
         }
     }
@@ -198,7 +198,7 @@ TEST(MatrixImplementation, Multiplication_Random) {
     auto result = matrix1 * matrix2;
 
     for (int i = 0; i < initial1.size(); i++) {
-        for (int j = 0; j < initial1.size(); j++) {
+        for (int j = 0; j < initial1[i].size(); j++) {
             EXPECT_EQ(result.get_value(i, j), expected[i][j]);
         }
     }
@@ -243,7 +243,7 @@ TEST(MatrixImplementation, SwapRows_Basic) {
     matrix.swap_rows(0, 1);
 
     for (int i = 0; i < initial.size(); i++) {
-        for (int j = 0; j < initial.size(); j++) {
+        for (int j = 0; j < initial[i].size(); j++) {
             EXPECT_EQ(matrix.get_value(i, j), expected[i][j]);
         }
     }
@@ -267,7 +267,7 @@ TEST(MatrixImplementation, SwapRows_Random) {
     matrix.swap_rows(0, 2);
 
     for (int i = 0; i < initial.size(); i++) {
-        for (int j = 0; j < initial.size(); j++) {
+        for (int j = 0; j < initial[i].size(); j++) {
             EXPECT_EQ(matrix.get_value(i, j), expected[i][j]);
         }
     }
@@ -290,7 +290,7 @@ TEST(MatrixImplementation, SwapCols_Basic) {
     matrix.swap_cols(0, 2);
 
     for (int i = 0; i < initial.size(); i++) {
-        for (int j = 0; j < initial.size(); j++) {
+        for (int j = 0; j < initial[i].size(); j++) {
             EXPECT_EQ(matrix.get_value(i, j), expected[i][j]);
         }
     }
@@ -315,7 +315,7 @@ TEST(MatrixImplementation, SwapCols_Random) {
     matrix.swap_cols(0, 3);
 
     for (int i = 0; i < initial.size(); i++) {
-        for (int j = 0; j < initial.size(); j++) {
+        for (int j = 0; j < initial[i].size(); j++) {
             EXPECT_EQ(matrix.get_value(i, j), expected[i][j]);
         }
     }
@@ -329,4 +329,69 @@ TEST(MatrixImplementation, OutOfBoundsThrowsException) {
     });
 
     EXPECT_THROW(matrix.get_value(4, 4), std::out_of_range);
+}
+
+TEST(MatrixImplementation, SetValue_OutOfBoundsThrowsException) {
+    std::vector<std::vector<int>> initial = {
+        { 1, 2, 3 },
+        { 4, 5, 6 },
+        { 7, 8, 9 },
+    };
+    Matrix matrix(initial);
+    EXPECT_THROW(matrix.set_value(3, 0, 100), std::out_of_range);
+    EXPECT_THROW(matrix.set_value(0, 3, 100), std::out_of_range);
+}
+
+TEST(MatrixImplementation, SwapRows_OutOfBoundsThrowsException) {
+    std::vector<std::vector<int>> initial = {
+        { 1, 2, 3 },
+        { 4, 5, 6 },
+        { 7, 8, 9 },
+    };
+    Matrix matrix(initial);
+    EXPECT_THROW(matrix.swap_rows(0, 3), std::out_of_range);
+}
+
+TEST(MatrixImplementation, SwapCols_OutOfBoundsThrowsException) {
+    std::vector<std::vector<int>> initial = {
+        { 1, 2, 3 },
+        { 4, 5, 6 },
+        { 7, 8, 9 },
+    };
+    Matrix matrix(initial);
+    EXPECT_THROW(matrix.swap_cols(1, 3), std::out_of_range);
+}
+
+TEST(MatrixImplementation, Multiplication_Identity) {
+    std::vector<std::vector<int>> identity = {
+        { 1, 0, 0 },
+        { 0, 1, 0 },
+        { 0, 0, 1 },
+    };
+    std::vector<std::vector<int>> matrixData = {
+        { 5, 7, 9 },
+        { 2, 3, 4 },
+        { 6, 8, 1 },
+    };
+    Matrix id(identity);
+    Matrix m(matrixData);
+    Matrix product = id * m;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            EXPECT_EQ(product.get_value(i, j), matrixData[i][j]);
+        }
+    }
+}
+
+TEST(MatrixImplementation, Addition_ExceptionDifferentDimensions) {
+    std::vector<std::vector<int>> matrix1 = {
+        { 1, 2 },
+        { 3, 4 },
+    };
+    std::vector<std::vector<int>> matrix2 = {
+        { 5, 6, 7 },
+        { 8, 9, 10 },
+        { 11, 12, 13 },
+    };
+    EXPECT_THROW(Matrix(matrix1) + Matrix(matrix2), std::invalid_argument);
 }
